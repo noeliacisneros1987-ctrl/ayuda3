@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centro de Ayuda — Uruguay</title>
+  <style>
+    body{font-family:system-ui,Arial,sans-serif;margin:20px;text-align:center;}
+    h1{margin-top:10px;}
+    .btn{
+      display:inline-block;margin:12px;padding:14px 18px;border-radius:10px;
+      text-decoration:none;color:#fff;font-weight:600;min-width:260px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    }
+    .wa{background:#25D366} /* WhatsApp */
+    .tel{background:#4a90e2} /* llamadas */
+    .call{background:#e04b4b} /* emergencia */
+    .note{margin-top:18px;color:#444;font-size:0.95rem}
+    .danger{color:#990000;font-weight:700;margin-top:10px}
+  </style>
+</head>
+<body>
+  <h1>Centro de Ayuda — Uruguay</h1>
+  <p>Seleccioná el contacto que querés usar:</p>
+
+  <!-- WhatsApp: solo mensaje y ubicación -->
+  <p>
+    <a class="btn wa" href="#" onclick="sendWhatsApp('59899019500')">
+      📩 WhatsApp — Enviar mensaje de ayuda con ubicación
+    </a>
+  </p>
+
+  <!-- Llamada 0800 4141 -->
+  <p>
+    <a class="btn tel" href="tel:08004141">📞 0800 4141 — Orientación violencia de género</a>
+  </p>
+
+  <!-- Llamada Línea Azul 0800 5050 -->
+  <p>
+    <a class="btn tel" href="tel:08005050">👶 0800 5050 — Línea Azul (niños/adolescentes)</a>
+  </p>
+
+  <!-- Llamada 911 -->
+  <p>
+    <a class="btn call" href="tel:911">🚨 911 — Emergencia inmediata</a>
+  </p>
+
+  <p class="note">Si das permiso al navegador, el botón de WhatsApp incluirá tu ubicación automáticamente.</p>
+  <p class="danger">Si estás en peligro inmediato: llamá al <strong>911</strong> ahora.</p>
+
+<script>
+function sendWhatsApp(number){
+  const baseMessage = "Necesito ayuda. Mi ubicación es: ";
+  
+  if(!navigator.geolocation){
+    // fallback si no hay geolocalización
+    window.location.href = 'https://wa.me/' + number + '?text=' + encodeURIComponent(baseMessage);
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(function(pos){
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+    const maps = 'https://www.google.com/maps?q=' + lat + ',' + lon;
+    const msg = baseMessage + maps;
+    const encoded = encodeURIComponent(msg);
+    window.location.href = 'https://wa.me/' + number + '?text=' + encoded;
+  }, function(err){
+    // fallback si deniega ubicación
+    window.location.href = 'https://wa.me/' + number + '?text=' + encodeURIComponent(baseMessage);
+  }, {enableHighAccuracy:true, timeout:7000});
+}
+</script>
+
+</body>
+</html>
